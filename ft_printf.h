@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:26:30 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/21 21:50:35 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/05/29 02:36:56 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <limits.h>
+#include <stdint.h> // for uintptr_t
 
 #include "libft/libft.h"
 
@@ -26,10 +28,10 @@ enum e_flagtypes {
 	flag_pound	= 0b001000,
 	flag_space	= 0b010000,
 	flag_plus	= 0b100000
-}
+};
 
 enum e_conversions{
-	conv_nil	= NULL,
+	conv_nil	= 0,
 	conv_c		= 'c', // char
 	conv_s		= 's', // string
 	conv_p		= 'p', // ptr address
@@ -39,13 +41,14 @@ enum e_conversions{
 	conv_x		= 'x', // hexa lowercase
 	conv_X 		= 'X', // hexa uppercase
 	conv_percent = '%' // escape to render %
-}
+};
 
 typedef struct s_vars {
 	int	flag;
 	size_t width;
 	size_t precision;
 	char conversion;
+	char *endpoint;
 } t_vars;
 
 #endif
