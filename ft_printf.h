@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:26:30 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/29 02:36:56 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/05/29 19:37:46 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,7 @@ typedef struct s_vars {
 	char conversion;
 	char *endpoint;
 } t_vars;
+
+size_t	ft_printf(const char *str, ...);
 
 #endif

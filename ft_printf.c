@@ -6,11 +6,30 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/29 17:24:59 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/05/29 21:52:47 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+
+static char	*ft_strrev(char *str, size_t len)
+{
+	size_t	start;
+	size_t	end;
+	char	temp;
+
+	start = 0;
+	end = len - 1;
+	while (start < end)
+	{
+		temp = str[start];
+		str[start] = str[end];
+		str[end] = temp;
+		start++;
+		end--;
+	}
+	return (str);
+}
 
 size_t ft_uilen_base(unsigned int num, int base)
 {
@@ -48,6 +67,27 @@ char *ft_uitoa_base(unsigned int n, char *base)
 		n /= baselen;
 	}
 	return str;
+}
+
+char *ft_uitoa(unsigned int n)
+{
+	size_t digits;
+	char	*str;
+	char	*itr;
+
+	digits = ft_uilen_base(n, 10);
+	str = ft_calloc(digits + 1, sizeof(char));
+	if (!str)
+		return NULL;
+	itr = str;
+	if (n == 0)
+		*itr = '0';
+	while (n > 0)
+	{
+		*itr++ = n % 10 + '0';
+		n /= 10;
+	}
+	return ft_strrev(str, digits);
 }
 
 size_t ft_ilen(int num)
@@ -159,12 +199,14 @@ char *ft_ptrtostr(void *ptr)
 		buffersize++;
 	}
 	ptrval = (uintptr_t)ptr;
-	ptrstr = ft_calloc(buffersize + 1, sizeof(char));
+	ptrstr = ft_calloc(buffersize + 3, sizeof(char));
 	if (!ptrstr)
 		return NULL;
+	ptrstr[0] = '0';
+	ptrstr[1] = 'x';
 	while (buffersize > 0)
 	{
-		ptrstr[buffersize-- - 1] = hex[ptrval % 16];
+		ptrstr[buffersize-- + 1] = hex[ptrval % 16];
 		ptrval /= 16;
 	}
 	return ptrstr;
@@ -173,7 +215,7 @@ char *ft_ptrtostr(void *ptr)
 char *ft_printf_getargstr(va_list args, t_vars *vars)
 {
 	char *str;
-	const conv = vars->conversion;
+	const char conv = vars->conversion;
 
 	if (conv == conv_c)
 	{
@@ -200,7 +242,7 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 	}
 	if (conv == conv_u)
 	{
-		str = ft_itoa(va_arg(args, unsigned int));
+		str = ft_uitoa(va_arg(args, unsigned int));
 		return str;
 	}
 	if (conv == conv_x)
@@ -222,7 +264,7 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 	return NULL;
 }
 
-void	ft_printf_renderarg(va_list args, t_vars *vars)
+size_t	ft_printf_renderarg(va_list args, t_vars *vars)
 {
 	// flags
 	// - override 0
@@ -232,13 +274,23 @@ void	ft_printf_renderarg(va_list args, t_vars *vars)
 	size_t arglen;
 
 	// get strlen of the value we're converting
-	argstr = ft_printf_getargstr(args, vars->conversion);
-	arglen = ft_strlen(argstr);
+	argstr = ft_printf_getargstr(args, vars);
+	if (vars->conversion == conv_c || vars->conversion == conv_percent)
+		arglen = 1;
+	else
+		arglen = ft_strlen(argstr);
+	if (vars->width > arglen)
+		vars->width -= arglen;
+	else
+		vars->width = 0;
+	arglen += vars->width;
 	if (vars->flag & flag_dash)
 	{
 		// left justification, pad with 0s
-		ft_putstr_fd(argstr, 1);
-		vars->width -= arglen;
+		if (vars->conversion == conv_c)
+			ft_putchar_fd(*argstr, 1);
+		else
+			ft_putstr_fd(argstr, 1);
 		while (vars->width > 0)
 		{
 			ft_putchar_fd('l', 1);
@@ -248,10 +300,7 @@ void	ft_printf_renderarg(va_list args, t_vars *vars)
 	else
 	{
 		// right justification
-		if (vars->width > arglen)
-			vars->width -= arglen;
-		else
-			vars->width = 0;
+
 		while (vars->width > 0)
 		{
 			if (vars->flag & flag_zero)
@@ -260,19 +309,27 @@ void	ft_printf_renderarg(va_list args, t_vars *vars)
 				ft_putchar_fd('r', 1);
 			vars->width--;
 		}
-		ft_putstr_fd(argstr, 1);
+		if (vars->conversion == conv_c)
+			ft_putchar_fd(*argstr, 1);
+		else
+			ft_putstr_fd(argstr, 1);
 	}
 	free(argstr);
+	return arglen;
 }
 
-void	ft_printf(char *str, ...)
+size_t	ft_printf(const char *s, ...)
 {
 	va_list args;
 	const char	*set = "-0.# +123456789";
 	const char	*end = "cspdiuxX%";
 	t_vars	*vars;
+	size_t len;
+	char *str;
 
-	va_start (args, str);
+	str = (char*)s;
+	len = 0;
+	va_start (args, s);
 	while (*str != '\0')
 	{
 		if (*str == '%')
@@ -287,26 +344,29 @@ void	ft_printf(char *str, ...)
 				// handle error
 			}
 			// process the vars with the va_list
-			ft_printf_renderarg(args, vars);
+			len += ft_printf_renderarg(args, vars);
 			// move the str to the new endpoint
 			if (vars->endpoint)
 				str = vars->endpoint;
+			free(vars);
 		}
 		else
+		{
 			ft_putchar_fd(*str, 1);
+			len++;
+		}
 		str++;
 	}
 	va_end (args);
-	// free(set);
-	// free(end);
+	return len;
 }
 
-int main(void)
-{
-	ft_printf("hello %010d %c\n", 69, 'A');
-	printf("----\n");
-	printf("hello %010d %c\n", 69, 'A');
-	printf("%#x", -1);
-	printf("!!!!\n");
-	return 0;
-}
+// int main(void)
+// {
+// 	ft_printf("hello %010d %c\n", 69, 'A');
+// 	printf("----\n");
+// 	printf("hello %010d %c\n", 69, 'A');
+// 	printf("%#x", -1);
+// 	printf("!!!!\n");
+// 	return 0;
+// }
