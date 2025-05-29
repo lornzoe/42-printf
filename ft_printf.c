@@ -6,13 +6,51 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/29 05:10:40 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/05/29 17:24:59 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-size_t ft_intlen(int num)
+size_t ft_uilen_base(unsigned int num, int base)
+{
+	size_t count;
+
+	count = 0;
+	if (num == 0)
+		return 1;
+	while (num != 0)
+	{
+		num /= base;
+		count++;
+	}
+	return count;
+}
+
+char *ft_uitoa_base(unsigned int n, char *base)
+{
+	size_t digits;
+	size_t baselen;
+	char	*str;
+	char	*itr;
+
+	baselen = ft_strlen(base);
+	digits = ft_uilen_base(n, baselen);
+	str = ft_calloc(digits + 1, sizeof(char));
+	if (!str)
+		return NULL;
+	itr = str;
+	if (n == 0)
+		*itr = base[0];
+	while (n > 0)
+	{
+		*itr++ = base[n % baselen];
+		n /= baselen;
+	}
+	return str;
+}
+
+size_t ft_ilen(int num)
 {
 	size_t count;
 
@@ -30,15 +68,15 @@ size_t ft_intlen(int num)
 int	vars_handlewidth(char *str, t_vars *vars)
 {
 	size_t width;
+	//str++;
 	// get atoi of *str
-	str++;
 	// overwrite var->width
 	width = ft_atoi(str);
 	vars->width = width;
 	// get digits of the result of atoi
 	// return increment
-	if (width <= INT_MAX)
-		return ft_intlen((int)width);
+	if (width <= INT_MAX && width >= 0)
+		return ft_ilen(width) - 1;
 	return (0);
 }
 
@@ -52,7 +90,7 @@ int vars_handleprecision(char *str, t_vars *vars)
 	// get digits of the result of atoi
 	// increment str by digits
 	if (width <= INT_MAX)
-		return ft_intlen((int)width);
+		return ft_ilen((int)width) - 1;
 	return (0);
 }
 
@@ -60,19 +98,22 @@ t_vars *vars_create(char *str, const char *set, const char *end)
 {
 	t_vars *vars;
 	char *chr;
-	char *str;
 
 	vars = ft_calloc(1, sizeof(t_vars));
 	if (!vars)
 		return NULL;
+	// initialise
+	vars->width = 0;
+	vars->precision = 0;
+
 	// handle flags
 	// this assumes we start after the %
-	while (ft_strchr(end, str) == NULL)
+	while (ft_strchr(end, *str) == NULL)
 	{
-		chr = ft_strchr(set, str);
+		chr = ft_strchr(set, *str);
 		if (*chr == '-')
 			vars->flag |= flag_dash;
-		else if (ft_isnum(*chr) && *chr != '0')
+		else if (ft_isdigit(*chr) && *chr != '0')
 		{
 			str += vars_handlewidth(str, vars);
 		}
@@ -95,7 +136,7 @@ t_vars *vars_create(char *str, const char *set, const char *end)
 		str++;
 	}
 	// handle conversion
-	vars->conversion = ft_strchr(end, str);
+	vars->conversion = *(ft_strchr(end, *str));
 	vars->endpoint = str;
 	return vars;
 }
@@ -129,16 +170,17 @@ char *ft_ptrtostr(void *ptr)
 	return ptrstr;
 }
 
-char *ft_printf_getargstr(va_list args, char conv)
+char *ft_printf_getargstr(va_list args, t_vars *vars)
 {
 	char *str;
+	const conv = vars->conversion;
 
 	if (conv == conv_c)
 	{
 		str = ft_calloc(1, 2);
 		if (!str)
 			return NULL;
-		*str = va_arg(args, char);
+		*str = (char)va_arg(args, int);
 		return str;
 	}
 	if (conv == conv_s)
@@ -163,17 +205,21 @@ char *ft_printf_getargstr(va_list args, char conv)
 	}
 	if (conv == conv_x)
 	{
-		// we need a itoa_base func here
+		str = ft_uitoa_base(va_arg(args, unsigned int), "0123456789abcdef");
+		return str;
 	}
 	if (conv == conv_X)
 	{
 		// same here
+		str = ft_uitoa_base(va_arg(args, unsigned int), "0123456789ABCDEF");
+		return str;
 	}
 	if (conv == conv_percent)
 	{
 		str = ft_strdup("%");
 		return str;
 	}
+	return NULL;
 }
 
 void	ft_printf_renderarg(va_list args, t_vars *vars)
@@ -195,20 +241,26 @@ void	ft_printf_renderarg(va_list args, t_vars *vars)
 		vars->width -= arglen;
 		while (vars->width > 0)
 		{
-			ft_putchar_fd(' ', 1);
+			ft_putchar_fd('l', 1);
 			vars->width--;
 		} 
 	}
 	else
 	{
-		vars->width -= arglen;
+		// right justification
+		if (vars->width > arglen)
+			vars->width -= arglen;
+		else
+			vars->width = 0;
 		while (vars->width > 0)
 		{
-			if (vars->flag & flag_)
-			ft_putchar_fd(' ', 1);
+			if (vars->flag & flag_zero)
+				ft_putchar_fd('0', 1);
+			else
+				ft_putchar_fd('r', 1);
 			vars->width--;
 		}
-		// right justification
+		ft_putstr_fd(argstr, 1);
 	}
 	free(argstr);
 }
@@ -216,8 +268,8 @@ void	ft_printf_renderarg(va_list args, t_vars *vars)
 void	ft_printf(char *str, ...)
 {
 	va_list args;
-	const char	*set = (const)ft_strdup("-0.# +123456789");
-	const char	*end = (const)ft_strdup("cspdiuxX%");
+	const char	*set = "-0.# +123456789";
+	const char	*end = "cspdiuxX%";
 	t_vars	*vars;
 
 	va_start (args, str);
@@ -235,22 +287,26 @@ void	ft_printf(char *str, ...)
 				// handle error
 			}
 			// process the vars with the va_list
-			
+			ft_printf_renderarg(args, vars);
 			// move the str to the new endpoint
 			if (vars->endpoint)
 				str = vars->endpoint;
-
 		}
+		else
+			ft_putchar_fd(*str, 1);
 		str++;
 	}
 	va_end (args);
-	free(set);
-	free(end);
+	// free(set);
+	// free(end);
 }
 
 int main(void)
 {
-	ft_printf("hello %d %d %d %d", 69420, 123929, 23023029, 23092930);
-
+	ft_printf("hello %010d %c\n", 69, 'A');
+	printf("----\n");
+	printf("hello %010d %c\n", 69, 'A');
+	printf("%#x", -1);
+	printf("!!!!\n");
 	return 0;
 }
