@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/05/31 12:43:36 by lyanga           ###   ########.fr        #
+#    Updated: 2025/05/31 21:02:21 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ p_printf_logo:
 addlibft:
 	$(MAKE) -C $(LIBFTDIR) extern OBJSPATH=../ BOBJSPATH=../
 
-test: $(NAME) 
+test: fclean $(NAME) 
 	@cc test.c -L. -lftprintf
 	@./a.out
 
@@ -75,16 +75,16 @@ $(NAME): $(OBJS) addlibft
 
 $(OBJSPATH)%.o: $(SRCSPATH)%.c
 	@mkdir -p $(dir $@) # 2> /dev/null || true
-	@$(CC) $(CFLAGS) -I$(INC) -c $< -o $@
+	@$(CC) $(DEBUG) $(CFLAGS) -I$(INC) -c $< -o $@
 	@printf "$(GRE)█$(D)"
 
 $(BOBJSPATH)%.o: $(BONUSPATH)%.c
 	@mkdir -p $(dir $@) # 2> /dev/null || true
-	@$(CC) $(CFLAGS) -I$(INC) -c $< -o $@
+	@$(CC) $(DEBUG) $(CFLAGS) -I$(INC) -c $< -o $@
 	@printf "$(YEL)█$(D)"
 
-b: $(OBJS) $(BOBJS)
-	@$(AR) $(NAME) $(OBJS) $(BOBJS)
+b: $(OBJS) $(BOBJS) addlibft
+	@$(AR) $(NAME) *.o
 
 bonus: b p_printf_logo
 

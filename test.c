@@ -16,7 +16,11 @@ int main(void)
 	// ft_printf("%s a\n", "WHAT IS WRONG WITH THIS STRING?");
 
 	//ft_printf("%s\n", NULL);
-	printf ("printf: %x\n", 100);
-	ft_printf ("ft_printf: %x\n", 100);
+	// printf ("printf:\n %01d \n", -9);
+	// ft_printf ("ft_printf:\n %01d \n", -9);
+	ft_putstr_fd("------\n", 1);
+	int x =  printf("pf:%.s\n", "-42");
+	int y =  ft_printf("ft:%.s\n", "-42");
+	printf("pf/ft: %d, %d", x, y);
 	return 0;
 }
