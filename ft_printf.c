@@ -6,104 +6,12 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/29 21:52:47 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/05/31 11:49:29 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char	*ft_strrev(char *str, size_t len)
-{
-	size_t	start;
-	size_t	end;
-	char	temp;
-
-	start = 0;
-	end = len - 1;
-	while (start < end)
-	{
-		temp = str[start];
-		str[start] = str[end];
-		str[end] = temp;
-		start++;
-		end--;
-	}
-	return (str);
-}
-
-size_t ft_uilen_base(unsigned int num, int base)
-{
-	size_t count;
-
-	count = 0;
-	if (num == 0)
-		return 1;
-	while (num != 0)
-	{
-		num /= base;
-		count++;
-	}
-	return count;
-}
-
-char *ft_uitoa_base(unsigned int n, char *base)
-{
-	size_t digits;
-	size_t baselen;
-	char	*str;
-	char	*itr;
-
-	baselen = ft_strlen(base);
-	digits = ft_uilen_base(n, baselen);
-	str = ft_calloc(digits + 1, sizeof(char));
-	if (!str)
-		return NULL;
-	itr = str;
-	if (n == 0)
-		*itr = base[0];
-	while (n > 0)
-	{
-		*itr++ = base[n % baselen];
-		n /= baselen;
-	}
-	return str;
-}
-
-char *ft_uitoa(unsigned int n)
-{
-	size_t digits;
-	char	*str;
-	char	*itr;
-
-	digits = ft_uilen_base(n, 10);
-	str = ft_calloc(digits + 1, sizeof(char));
-	if (!str)
-		return NULL;
-	itr = str;
-	if (n == 0)
-		*itr = '0';
-	while (n > 0)
-	{
-		*itr++ = n % 10 + '0';
-		n /= 10;
-	}
-	return ft_strrev(str, digits);
-}
-
-size_t ft_ilen(int num)
-{
-	size_t count;
-
-	count = 0;
-	if (num == 0)
-		return 1;
-	while (num != 0)
-	{
-		num /= 10;
-		count++;
-	}
-	return count;
-}
 
 int	vars_handlewidth(char *str, t_vars *vars)
 {
@@ -115,7 +23,7 @@ int	vars_handlewidth(char *str, t_vars *vars)
 	vars->width = width;
 	// get digits of the result of atoi
 	// return increment
-	if (width <= INT_MAX && width >= 0)
+	if (width <= INT_MAX && width > 0)
 		return ft_ilen(width) - 1;
 	return (0);
 }

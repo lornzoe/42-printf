@@ -1,3 +1,4 @@
 printfttester/
 *.o
 *.a
+*.out

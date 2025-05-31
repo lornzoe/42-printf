@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/05/29 19:49:27 by lyanga           ###   ########.fr        #
+#    Updated: 2025/05/31 11:35:34 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,6 +66,10 @@ p_printf_logo:
 addlibft:
 	$(MAKE) -C $(LIBFTDIR) extern OBJSPATH=../ BOBJSPATH=../
 
+test: $(NAME) 
+	@cc test.c -L. -lftprintf
+	@./a.out
+
 $(NAME): $(OBJS) addlibft
 	@$(AR) $(NAME) *.o
 
@@ -86,6 +90,7 @@ bonus: b p_printf_logo
 
 clean:
 	@$(RM) $(OBJS) $(BOBJS)
+	@$(RM) *.o
 	@echo "$(B)Cleaned$(D)"
 
 
