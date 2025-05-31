@@ -16,6 +16,7 @@ int main(void)
 	// ft_printf("%s a\n", "WHAT IS WRONG WITH THIS STRING?");
 
 	//ft_printf("%s\n", NULL);
-	printf ("%s", NULL);
+	printf ("printf: %x\n", 100);
+	ft_printf ("ft_printf: %x\n", 100);
 	return 0;
 }

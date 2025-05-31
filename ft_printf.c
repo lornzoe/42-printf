@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/31 11:49:29 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/05/31 12:41:37 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,10 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 	if (conv == conv_s)
 	{
 		str = va_arg(args, char*);
-		str = ft_strdup(str);
+		if (str == NULL)
+			str = ft_strdup("(null)");
+		else
+			str = ft_strdup(str);
 		return str;
 	}
 	if (conv == conv_p)
@@ -156,13 +159,13 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 	if (conv == conv_x)
 	{
 		str = ft_uitoa_base(va_arg(args, unsigned int), "0123456789abcdef");
-		return str;
+		return ft_strrev(str, ft_strlen(str));
 	}
 	if (conv == conv_X)
 	{
 		// same here
 		str = ft_uitoa_base(va_arg(args, unsigned int), "0123456789ABCDEF");
-		return str;
+		return ft_strrev(str, ft_strlen(str));
 	}
 	if (conv == conv_percent)
 	{

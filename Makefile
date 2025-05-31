@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/05/31 11:35:34 by lyanga           ###   ########.fr        #
+#    Updated: 2025/05/31 12:43:36 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ INC			=	./
 
 SRCS		=	ft_printf.c
 
-BONUSSRCS	=
+BONUSSRCS	=	ft_printf.c
 
 SRCSNAME	=	$(subst $(SRCSPATH), , $(SRCS))
 
