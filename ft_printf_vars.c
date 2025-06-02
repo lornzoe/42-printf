@@ -6,13 +6,13 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:34:11 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/02 21:40:54 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 03:45:57 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void vars_handleconflictflags(t_vars *vars)
+static void ft_printf_vars_handleconflictflags(t_vars *vars)
 {
 	if (vars->flag & flag_zero && vars->flag & flag_has_precision)
 		vars->flag = vars->flag & ~(flag_zero);
@@ -21,7 +21,7 @@ static void vars_handleconflictflags(t_vars *vars)
 
 }
 
-static int	vars_handleflag_width(char *str, t_vars *vars)
+static int	ft_printf_vars_handleflag_width(char *str, t_vars *vars)
 {
 	size_t i;
 
@@ -34,7 +34,7 @@ static int	vars_handleflag_width(char *str, t_vars *vars)
 	return (0);
 }
 
-static int vars_handleflag_precision(char *str, t_vars *vars)
+static int ft_printf_vars_handleflag_precision(char *str, t_vars *vars)
 {
 	size_t i;
 
@@ -47,14 +47,14 @@ static int vars_handleflag_precision(char *str, t_vars *vars)
 	return (0);
 }
 
-static size_t vars_handleflags(char chr, char* str, t_vars *vars)
+static size_t ft_printf_vars_handleflags(char chr, char* str, t_vars *vars)
 {
 	if (chr == '-')
 		vars->flag |= flag_dash;
 	else if (ft_isdigit(chr) && chr != '0')
 	{
 		vars->flag |= flag_has_width;
-		return (vars_handleflag_width(str, vars));
+		return (ft_printf_vars_handleflag_width(str, vars));
 	}
 	else if (chr == '0')
 		vars->flag |= flag_zero;
@@ -62,7 +62,7 @@ static size_t vars_handleflags(char chr, char* str, t_vars *vars)
 	{
 		vars->flag |= flag_has_precision;
 		str++;
-		return (vars_handleflag_precision(str, vars) + 1);
+		return (ft_printf_vars_handleflag_precision(str, vars) + 1);
 	}
 	else if (chr == '#')
 		vars->flag |= flag_hash;
@@ -73,7 +73,7 @@ static size_t vars_handleflags(char chr, char* str, t_vars *vars)
 	return (1);
 }
 
-t_vars *vars_create(char *str, const char *set, const char *end)
+t_vars *ft_printf_vars_create(char *str, const char *set, const char *end)
 {
 	t_vars *vars;
 	char *chr;
@@ -86,10 +86,10 @@ t_vars *vars_create(char *str, const char *set, const char *end)
 		chr = ft_strchr(set, *str);
 		if (!chr)
 			return NULL;
-		str += vars_handleflags(*chr, str, vars);
+		str += ft_printf_vars_handleflags(*chr, str, vars);
 	}
 	vars->conversion = *(ft_strchr(end, *str));
 	vars->endpoint = str;
-	vars_handleconflictflags(vars);
+	ft_printf_vars_handleconflictflags(vars);
 	return (vars);
 }
