@@ -18,9 +18,11 @@ int main(void)
 	//ft_printf("%s\n", NULL);
 	// printf ("printf:\n %01d \n", -9);
 	// ft_printf ("ft_printf:\n %01d \n", -9);
+
 	ft_putstr_fd("------\n", 1);
-	int x =  printf("pf:%.s\n", "-42");
-	int y =  ft_printf("ft:%.s\n", "-42");
+	char *a = malloc(1);
+	int x =  printf("pf:%#x\n", 0);
+	int y =  ft_printf("ft:%#x\n", 0);
 	printf("pf/ft: %d, %d", x, y);
 	return 0;
 }

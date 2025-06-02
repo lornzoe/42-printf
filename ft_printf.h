@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:26:30 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/31 21:50:31 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/02 21:31:47 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <limits.h>
-#include <stdint.h> // for uintptr_t
+#include <stdint.h>
 
 #include "libft/libft.h"
 
@@ -53,5 +53,6 @@ typedef struct s_vars {
 } t_vars;
 
 size_t	ft_printf(const char *str, ...);
+t_vars *vars_create(char *str, const char *set, const char *end);
 
 #endif

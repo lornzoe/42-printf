@@ -6,109 +6,11 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/05/31 22:25:18 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/02 21:31:22 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-void vars_handleconflictflags(t_vars *vars)
-{
-	if (vars->flag & flag_zero && vars->flag & flag_precision)
-		vars->flag = vars->flag & ~(flag_zero);
-	if (vars->flag & flag_zero && vars->conversion == conv_s)
-		vars->flag = vars->flag & ~(flag_zero);
-
-}
-
-void vars_printvars(t_vars *vars)
-{
-	printf(">>USING PRINTF(), REMEMBER TO REMOVE\n");
-	printf(">>flag: %s\n", ft_uitoa_base((unsigned)vars->flag, "01"));
-	printf(">>width: %zu\n", vars->width);
-	printf(">>precision: %zu\n", vars->precision);
-	printf(">>conversion: %c\n", vars->conversion);
-	printf(">>isendsigned: %i\n", (int)vars->isnegsigned);
-}
-
-int	vars_handlewidth(char *str, t_vars *vars)
-{
-	size_t width;
-	//str++;
-	// get atoi of *str
-	// overwrite var->width
-	width = ft_atoi(str);
-	vars->width = width;
-	// get digits of the result of atoi
-	// return increment
-	if (width <= INT_MAX)
-		return ft_ilen(width) - 1;
-	return (0);
-}
-
-int vars_handleprecision(char *str, t_vars *vars)
-{
-	size_t width;
-	// get atoi of *chr
-	str++;
-	width = ft_atoi(str);
-	// overwrite var->precision
-	vars->precision = width;
-	// get digits of the result of atoi
-	// increment str by digits
-	if (width <= INT_MAX)
-		return ft_ilen(width);
-	return (0);
-}
-
-t_vars *vars_create(char *str, const char *set, const char *end)
-{
-	t_vars *vars;
-	char *chr;
-
-	vars = ft_calloc(1, sizeof(t_vars));
-	if (!vars)
-		return NULL;
-	// initialise
-	vars->width = 0;
-	vars->precision = 0;
-	vars->isnegsigned = 0;
-
-	// handle flags
-	// this assumes we start after the %
-	while (ft_strchr(end, *str) == NULL)
-	{
-		chr = ft_strchr(set, *str);
-		ft_putchar_fd(*chr, 1);
-		if (*chr == '-')
-			vars->flag |= flag_dash;
-		else if (ft_isdigit(*chr) && *chr != '0')
-		{
-			// ft_putstr_fd("> width triggered\n", 1);
-			str += vars_handlewidth(str, vars);
-			vars->flag |= flag_width;
-		}
-		else if (*chr == '0')
-			vars->flag |= flag_zero;
-		else if (*chr == '.')
-		{
-			// ft_putstr_fd("> precision triggered\n", 1);
-			str += vars_handleprecision(str, vars);
-			vars->flag |= flag_precision;
-		}
-		else if (*chr == '#')
-			vars->flag |= flag_pound;
-		else if (*chr == ' ')
-			vars->flag |= flag_space;
-		else if (*chr == '+')
-			vars->flag |= flag_plus;
-		str++;
-	}
-	// handle conversion
-	vars->conversion = *(ft_strchr(end, *str));
-	vars->endpoint = str;
-	return vars;
-}
 
 char *ft_ptrtostr(void *ptr)
 {
@@ -148,20 +50,18 @@ char *ft_printf_zeropaddedstr(size_t zeros, char *str)
 	char *result;
 	if (zeros == 0)
 		return (ft_strdup(str));
-	// create a temp string with x 0s
 	temp = ft_calloc(zeros + 1, sizeof(char));
 	if (!temp)
 		return NULL;
 	i = 0;
 	while (i < zeros)
 		temp[i++] = '0';
-	// strjoin with current string
 	result = ft_strjoin(temp, str);
 	free(temp);
 	return result;
 }
 
-char *ft_printf_getargstr(va_list args, t_vars *vars)
+static char	*ft_printf_getargstr(va_list args, t_vars *vars)
 {
 	char *str;
 	const char conv = vars->conversion;
@@ -176,26 +76,30 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 	}
 	if (conv == conv_s)
 	{	
-		ft_putstr_fd("ok!\n", 1);
-		char *temp;
-		temp = va_arg(args, char*);
-		if (temp == NULL)
-			str = ft_strdup("");
-		else if (*temp == '\0')
-			str = ft_strdup("");
+		str = va_arg(args, char*);
+		if (str == NULL)
+		{
+			str = ft_strdup("(null)");
+			if (vars->flag & flag_precision && vars->precision < ft_strlen(str))
+			{
+				free(str);
+				str = ft_strdup("");
+			}
+		}
 		else
 		{
+			char *temp = ft_strdup(str);
 			if (vars->flag & flag_precision)
 			{
-				if (vars->precision)
+				if (vars->precision > 0)
 					str = ft_substr(temp, 0, vars->precision);
-				else
+				else if (vars->precision == 0)
 					str = ft_strdup("");
 			}
 			else
 				str = ft_strdup(temp);
+			free(temp);
 		}
-		free(temp);
 		return str;
 	}
 	if (conv == conv_p)
@@ -228,6 +132,15 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 		}
 		else
 			str = temp;
+		if ((vars->flag & flag_plus || vars->flag & flag_space) && !vars->isnegsigned)
+		{
+			temp = str;
+			if (vars->flag & flag_plus)
+				str = ft_strjoin("+", temp);
+			else
+				str = ft_strjoin(" ", temp);
+			free(temp);
+		}
 		return str;
 	}
 	if (conv == conv_u)
@@ -246,16 +159,36 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 			str = temp;
 		return str;
 	}
-	if (conv == conv_x)
+	if (conv == conv_x || conv == conv_X)
 	{
-		str = ft_uitoa_base(va_arg(args, unsigned int), "0123456789abcdef");
-		return ft_strrev(str, ft_strlen(str));
-	}
-	if (conv == conv_X)
-	{
-		// same here
-		str = ft_uitoa_base(va_arg(args, unsigned int), "0123456789ABCDEF");
-		return ft_strrev(str, ft_strlen(str));
+		char *temp;
+		int x;
+		x = va_arg(args, unsigned int);
+		if (x == 0 && vars->flag & flag_precision && vars->precision == 0)
+			return (ft_strdup(""));		
+		if (conv == conv_x)
+			temp = ft_uitoa_base(x, "0123456789abcdef");
+		else
+			temp = ft_uitoa_base(x, "0123456789ABCDEF");
+		temp = ft_strrev(temp, ft_strlen(temp));
+		if (vars->flag & flag_precision && vars->precision > ft_strlen(temp))
+		{
+			str = ft_printf_zeropaddedstr(vars->precision - ft_strlen(temp), temp);
+			free(temp);
+		}		
+		else
+			str = temp;
+		// handle altform flag
+		if (vars->flag & flag_pound && x != 0)
+		{
+			temp = str;
+			if(conv == conv_x)
+				str = ft_strjoin("0x", temp);
+			else
+				str = ft_strjoin("0X", temp);
+			free(temp);
+		}
+		return str;
 	}
 	if (conv == conv_percent)
 	{
@@ -265,16 +198,11 @@ char *ft_printf_getargstr(va_list args, t_vars *vars)
 	return NULL;
 }
 
-size_t	ft_printf_renderarg(va_list args, t_vars *vars)
+static size_t	ft_printf_printarg(va_list args, t_vars *vars)
 {
-	// flags
-	// - override 0
-	// + overrides ' '
-
 	char *argstr;
 	size_t arglen;
 
-	// vars_printvars(vars);
 	// get strlen of the value we're converting
 	argstr = ft_printf_getargstr(args, vars);
 	if (vars->conversion == conv_c || vars->conversion == conv_percent)
@@ -328,12 +256,9 @@ size_t	ft_printf_renderarg(va_list args, t_vars *vars)
 	free(argstr);
 	return arglen;
 }
-
 size_t	ft_printf(const char *s, ...)
 {
 	va_list args;
-	const char	*set = "-0.# +123456789";
-	const char	*end = "cspdiuxX%";
 	t_vars	*vars;
 	size_t len;
 	char *str;
@@ -347,15 +272,11 @@ size_t	ft_printf(const char *s, ...)
 		{
 			str++;
 			if (*str == '\0')
-				break;
-			// create the vars
-			vars = vars_create(str, set, end);
+				break ;
+			vars = vars_create(str, "-0.# +123456789", "cspdiuxX%");
 			if (!vars)
-				return 0;
-			// process the vars
-			vars_handleconflictflags(vars);
-			len += ft_printf_renderarg(args, vars);
-			// move the str to the new endpoint
+				break ;
+			len += ft_printf_printarg(args, vars);
 			if (vars->endpoint)
 				str = vars->endpoint;
 			free(vars);

@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/05/31 21:02:21 by lyanga           ###   ########.fr        #
+#    Updated: 2025/06/02 21:34:54 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,9 +35,9 @@ BONUSPATH	=	./
 BOBJSPATH	=	./
 INC			=	./
 
-SRCS		=	ft_printf.c
+SRCS		=	ft_printf.c ft_printf_vars.c
 
-BONUSSRCS	=	ft_printf.c
+BONUSSRCS	=	ft_printf.c ft_printf_vars.c
 
 SRCSNAME	=	$(subst $(SRCSPATH), , $(SRCS))
 
@@ -51,7 +51,7 @@ BOBJS		= 	$(addprefix $(BOBJSPATH), $(BOBJSNAME))
 # **************************************************************************** #
 # rules
 
-all: $(NAME) p_printf_logo
+all: $(NAME) p_printf_logo clean
 	@printf "\n$(B)$(MAG)$(NAME) is finished compiling$(D)\n"
 
 p_printf_logo:
@@ -61,16 +61,16 @@ p_printf_logo:
 	@printf "   /     /       /  )/    /    )/   ) /    /      \n"
 	@printf "\`.'     /._____./\`-'/  _.(__. '/   ( /  \`.'       \n"
 	@printf "          \`==='/                    \`- lyanga AAAA\n"
-	@printf "because ft_putnbr() and ft_putstr() aren’t enough.\n"
 
 addlibft:
 	$(MAKE) -C $(LIBFTDIR) extern OBJSPATH=../ BOBJSPATH=../
 
-test: fclean $(NAME) 
+test: fclean $(NAME)
 	@cc test.c -L. -lftprintf
+	@$(RM) *.o
 	@./a.out
 
-$(NAME): $(OBJS) addlibft
+$(NAME): $(OBJS) addlibft 
 	@$(AR) $(NAME) *.o
 
 $(OBJSPATH)%.o: $(SRCSPATH)%.c
@@ -86,7 +86,7 @@ $(BOBJSPATH)%.o: $(BONUSPATH)%.c
 b: $(OBJS) $(BOBJS) addlibft
 	@$(AR) $(NAME) *.o
 
-bonus: b p_printf_logo
+bonus: b p_printf_logo clean
 
 clean:
 	@$(RM) $(OBJS) $(BOBJS)
