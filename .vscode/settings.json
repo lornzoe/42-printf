@@ -1,7 +1,9 @@
 {
 	"files.associations": {
 		"libft.h": "c",
-		"limits": "c"
+		"limits": "c",
+		"charconv": "c",
+		"ft_printf.h": "c"
 	},
 	"makefile.makefilePath": ""
 }

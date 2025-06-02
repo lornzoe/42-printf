@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/06/02 21:34:54 by lyanga           ###   ########.fr        #
+#    Updated: 2025/06/02 22:51:35 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ BONUSPATH	=	./
 BOBJSPATH	=	./
 INC			=	./
 
-SRCS		=	ft_printf.c ft_printf_vars.c
+SRCS		=	ft_printf.c ft_printf_vars.c ft_printf_getpaddedstr.c
 
 BONUSSRCS	=	ft_printf.c ft_printf_vars.c
 

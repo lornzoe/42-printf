@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:34:11 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/02 21:33:55 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/02 21:40:54 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void vars_handleconflictflags(t_vars *vars)
 {
-	if (vars->flag & flag_zero && vars->flag & flag_precision)
+	if (vars->flag & flag_zero && vars->flag & flag_has_precision)
 		vars->flag = vars->flag & ~(flag_zero);
 	if (vars->flag & flag_zero && vars->conversion == conv_s)
 		vars->flag = vars->flag & ~(flag_zero);
@@ -53,19 +53,19 @@ static size_t vars_handleflags(char chr, char* str, t_vars *vars)
 		vars->flag |= flag_dash;
 	else if (ft_isdigit(chr) && chr != '0')
 	{
-		vars->flag |= flag_width;
+		vars->flag |= flag_has_width;
 		return (vars_handleflag_width(str, vars));
 	}
 	else if (chr == '0')
 		vars->flag |= flag_zero;
 	else if (chr == '.')
 	{
-		vars->flag |= flag_precision;
+		vars->flag |= flag_has_precision;
 		str++;
 		return (vars_handleflag_precision(str, vars) + 1);
 	}
 	else if (chr == '#')
-		vars->flag |= flag_pound;
+		vars->flag |= flag_hash;
 	else if (chr == ' ')
 		vars->flag |= flag_space;
 	else if (chr == '+')

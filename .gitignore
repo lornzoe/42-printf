@@ -3,3 +3,4 @@ printfttester2/
 *.o
 *.a
 *.out
+test.c
