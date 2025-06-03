@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 14:28:51 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/10 19:40:33 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+char	*ft_strdup(const char *s)
 {
-	char	*str;
+	char	*dest;
 	char	*temp;
-	int		x;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	dest = ft_calloc(ft_strlen(s) + 1, sizeof(char));
+	if (!dest)
+		return (NULL);
+	temp = dest;
+	while (*s)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		*temp = *s;
+		temp++;
+		s++;
 	}
-	return (str);
+	*temp = *s;
+	return (dest);
 }

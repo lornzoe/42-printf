@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 14:12:33 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/10 19:34:21 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	unsigned char	*temp;
+	size_t			i;
+	size_t			totalsize;
+	size_t			limit;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
-	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
-	}
-	return (str);
+	limit = -1;
+	if (!nmemb || !size)
+		return (malloc(0));
+	if (limit / nmemb < size)
+		return (NULL);
+	totalsize = nmemb * size;
+	temp = malloc(totalsize);
+	if (!temp)
+		return (NULL);
+	i = 0;
+	while (i < totalsize)
+		temp[i++] = 0;
+	return (temp);
 }

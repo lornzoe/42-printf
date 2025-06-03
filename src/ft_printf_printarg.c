@@ -6,12 +6,11 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 08:03:47 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 17:55:38 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 18:35:17 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
 
 static void	ft_printf_printarg_rightjustify(char *argstr, t_vars *vars)
 {

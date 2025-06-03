@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 13:24:33 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/21 17:22:41 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	size_t	itr;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
-	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
-	}
-	return (str);
+	itr = 0;
+	while (s1[itr] && s1[itr] == s2[itr] && itr < n)
+		itr++;
+	if (itr == n)
+		return (0);
+	return ((unsigned char)s1[itr] - (unsigned char)s2[itr]);
 }

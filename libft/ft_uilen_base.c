@@ -1,34 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_uilen_base.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/31 11:45:58 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/02 23:16:19 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+size_t	ft_uilen_base(unsigned int num, int base)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	size_t	count;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	count = 0;
+	if (num == 0)
+		return (1);
+	while (num != 0)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		num /= base;
+		count++;
 	}
-	return (str);
+	return (count);
 }

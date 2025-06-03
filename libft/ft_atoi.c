@@ -1,34 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 13:50:28 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/31 11:56:55 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+int	ft_atoi(const char *nptr)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	int		result;
+	int		sign;
+	char	*s;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	result = 0;
+	sign = 1;
+	s = (char *)nptr;
+	while (*s && ft_isspace(*s))
+		s++;
+	if (s && (*s == '+' || *s == '-'))
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		if (*s == '-')
+			sign = -1;
+		s++;
 	}
-	return (str);
+	while (*s && ft_isdigit(*s))
+	{
+		result *= 10;
+		result += (*s - '0');
+		s++;
+	}
+	return (result *= sign);
 }

@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/10 10:32:57 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/10 19:35:31 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	t_list	newlist;
+	t_list	*node;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	if (!lst || !f | !del)
+		return (NULL);
+	newlist.next = NULL;
+	while (lst)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
+		node = ft_lstnew(f(lst->content));
+		if (!node)
 		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
+			ft_lstclear(&(newlist.next), del);
+			return (NULL);
 		}
+		ft_lstadd_back(&(newlist.next), node);
+		lst = lst->next;
 	}
-	return (str);
+	return (newlist.next);
 }

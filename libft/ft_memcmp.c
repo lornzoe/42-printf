@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 13:34:30 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/10 19:36:49 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	unsigned char	*one;
+	unsigned char	*two;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	if (n == 0)
+		return (0);
+	one = (unsigned char *)s1;
+	two = (unsigned char *)s2;
+	while (n-- > 0)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		if (*one - *two != 0)
+			return (*one - *two);
+		one++;
+		two++;
 	}
-	return (str);
+	return (0);
 }

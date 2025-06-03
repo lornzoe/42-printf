@@ -1,0 +1,9 @@
+*.pdf
+.vscode/*
+.vscode
+.vscode/settings.json
+a.out
+*.gch
+*.o
+libfttester/
+libft.a

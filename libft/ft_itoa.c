@@ -1,34 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 22:47:04 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/31 11:44:31 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+char	*ft_itoa(int n)
 {
+	int		negative;
+	int		digits;
 	char	*str;
-	char	*temp;
-	int		x;
+	char	*itr;
+	long	num;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	negative = (n < 0);
+	digits = ft_ilen(n) + negative;
+	str = ft_calloc(digits + 1, sizeof(char));
+	if (!str)
+		return (NULL);
+	itr = str;
+	num = (long)n;
+	if (negative)
+		num = -num;
+	if (num == 0)
+		*itr = '0';
+	while (num > 0)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		*itr++ = (num % 10) + '0';
+		num /= 10;
 	}
-	return (str);
+	if (negative)
+		*itr = '-';
+	return (ft_strrev(str, digits));
 }

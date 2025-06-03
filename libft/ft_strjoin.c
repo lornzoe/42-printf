@@ -1,34 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 15:01:29 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/07 00:47:29 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*str;
+	char	*result;
 	char	*temp;
-	int		x;
+	char	*itr;
+	size_t	len;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
-	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
-	}
-	return (str);
+	len = ft_strlen(s1) + ft_strlen(s2);
+	result = malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
+	itr = result;
+	temp = (char *)s1;
+	while (*temp)
+		*itr++ = *temp++;
+	temp = (char *)s2;
+	while (*temp)
+		*itr++ = *temp++;
+	*itr = 0;
+	return (result);
 }

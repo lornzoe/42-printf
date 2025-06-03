@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 12:04:18 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/10 19:37:23 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	unsigned char	*d;
+	unsigned char	*s;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	d = dest;
+	s = (unsigned char *)src;
+	if (d <= s)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		while (n-- > 0)
+			*d++ = *s++;
 	}
-	return (str);
+	else
+	{
+		while (n-- > 0)
+			d[n] = s[n];
+	}
+	return (dest);
 }

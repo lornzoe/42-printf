@@ -1,34 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 14:35:31 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/10 19:41:03 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	char	*dest;
+	char	*src;
+	size_t	l;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
-	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
-	}
-	return (str);
+	if (!s)
+		return (NULL);
+	l = ft_strlen(s);
+	if (start > l)
+		return (ft_calloc(1, sizeof(char)));
+	l -= start;
+	if (len < l)
+		l = len;
+	dest = ft_calloc(l + 1, sizeof(char));
+	if (!dest)
+		return (NULL);
+	src = (char *)s;
+	src += start;
+	ft_strlcpy(dest, src, l + 1);
+	return (dest);
 }

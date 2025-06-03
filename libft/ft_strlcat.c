@@ -1,34 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
+/*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:35:10 by lyanga           ###   ########.fr       */
+/*   Created: 2025/05/06 12:25:53 by lyanga            #+#    #+#             */
+/*   Updated: 2025/05/07 00:47:30 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	char	*str;
-	char	*temp;
-	int		x;
+	size_t	itr1;
+	size_t	itr2;
 
-	x = va_arg(args, int);
-	str = ft_itoa(ft_abs(x));
-	if (x < 0)
+	itr1 = ft_strlen(dst);
+	if (size <= itr1)
+		return (ft_strlen(src) + size);
+	itr2 = 0;
+	while ((itr1 + itr2) < (size - 1) && src[itr2] != 0)
 	{
-		vars->isnegsigned = 1;
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
+		dst[itr1 + itr2] = src[itr2];
+		itr2++;
 	}
-	return (str);
+	if (itr1 != size)
+		dst[itr1 + itr2] = '\0';
+	return (itr1 + ft_strlen(src));
 }
