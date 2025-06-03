@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/06/03 18:54:35 by lyanga           ###   ########.fr        #
+#    Updated: 2025/06/03 19:08:50 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -105,7 +105,7 @@ fclean:	clean
 
 re:	fclean all
 
-.PHONY: all clean fclean re bonus p_bar p_bar_bonus p_bar_close p_printf_logo b bonus
+.PHONY: all clean fclean re bonus b addlibft
 
 # **************************************************************************** #
 # text colours
