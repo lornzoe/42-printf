@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 02:58:25 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 03:25:15 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:38:44 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,18 @@ char	*ft_printf_getargstr_u(va_list args, t_vars *vars)
 {
 	char	*str;
 	char	*temp;
+	size_t	len;
+	int		x;
 
-	int x = va_arg(args, unsigned int);
+	x = va_arg(args, unsigned int);
 	if (x == 0 && vars->flag & flag_has_precision && vars->precision == 0)
 		return (ft_strdup(""));
 	str = ft_uitoa(x);
-	if (vars->flag & flag_has_precision && vars->precision > ft_strlen(str))
+	len = ft_strlen(str);
+	if (vars->flag & flag_has_precision && vars->precision > len)
 	{
 		temp = str;
-		str = ft_printf_getpaddedstr(vars->precision - ft_strlen(temp), temp, '0');
+		str = ft_printf_getpaddedstr(vars->precision - len, temp, '0');
 		free(temp);
 	}
 	return (str);

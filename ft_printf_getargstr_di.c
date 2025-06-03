@@ -6,30 +6,33 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:25:11 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:36:17 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static char*	apply_precision_flag(char *str, t_vars *vars)
+static char	*apply_precision_flag(char *str, t_vars *vars)
 {
 	char	*temp;
+	size_t	len;
 
 	temp = str;
-	if (vars->flag & flag_has_precision && vars->precision > ft_strlen(temp))
+	len = ft_strlen(temp);
+	if (vars->flag & flag_has_precision && vars->precision > len)
 	{
-		str = ft_printf_getpaddedstr(vars->precision - ft_strlen(temp), temp, '0');
+		str = ft_printf_getpaddedstr(vars->precision - len, temp, '0');
 		free(temp);
 	}
 	return (str);
 }
 
-static char*	apply_sign_flag(char *str, t_vars *vars)
+static char	*apply_sign_flag(char *str, t_vars *vars)
 {
 	char	*temp;
 
-	if ((vars->flag & flag_plus || vars->flag & flag_space) && !vars->isnegsigned)
+	if ((vars->flag & flag_plus || vars->flag & flag_space)
+		&& !vars->isnegsigned)
 	{
 		temp = str;
 		if (vars->flag & flag_plus)
@@ -41,26 +44,30 @@ static char*	apply_sign_flag(char *str, t_vars *vars)
 	return (str);
 }
 
+static char	*handle_negative(char *str, int x, t_vars *vars)
+{
+	char	*temp;
+
+	vars->isnegsigned = 1;
+	str = ft_itoa(ft_abs(x));
+	if (*str == '-')
+	{
+		temp = str;
+		str = ft_strtrim(str, "-");
+		free(temp);
+	}
+}
+
 char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
 {
-	char *str;
-	char *temp;
+	char	*str;
+	int		x;
 
-	int x = va_arg(args, int);
-	if (x == 0 
-		&& vars->flag & flag_has_precision && vars->precision == 0)
-		return (ft_strdup(""));		
+	x = va_arg(args, int);
+	if (x == 0 && vars->flag & flag_has_precision && vars->precision == 0)
+		return (ft_strdup(""));
 	if (x < 0)
-	{
-		vars->isnegsigned = 1;
-		str = ft_itoa(ft_abs(x));
-		if (*str == '-')
-		{
-			temp = str;
-			str = ft_strtrim(str, "-");
-			free(temp);
-		}
-	}
+		handle_negative(str, x, vars);
 	else
 		str = ft_itoa(x);
 	str = apply_precision_flag(str, vars);

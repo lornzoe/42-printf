@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:34:11 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:28:22 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:49:36 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,19 +72,19 @@ static size_t	ft_printf_vars_handleflags(char chr, char *str, t_vars *vars)
 	return (1);
 }
 
-t_vars *ft_printf_vars_create(char *str, const char *set, const char *end)
+t_vars	*ft_printf_vars_create(char *str, const char *set, const char *end)
 {
-	t_vars *vars;
-	char *chr;
+	t_vars	*vars;
+	char	*chr;
 
 	vars = ft_calloc(1, sizeof(t_vars));
 	if (!vars)
-		return NULL;
+		return (NULL);
 	while (ft_strchr(end, *str) == NULL)
 	{
 		chr = ft_strchr(set, *str);
 		if (!chr)
-			return NULL;
+			return (NULL);
 		str += ft_printf_vars_handleflags(*chr, str, vars);
 	}
 	vars->conversion = *(ft_strchr(end, *str));

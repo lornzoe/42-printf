@@ -6,13 +6,13 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 08:03:47 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:09:38 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:48:54 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void ft_printf_printarg_leftjustify(char *argstr, t_vars *vars)
+static void	ft_printf_printarg_leftjustify(char *argstr, t_vars *vars)
 {
 	if (vars->isnegsigned)
 		ft_putchar_fd('-', 1);
@@ -24,7 +24,7 @@ static void ft_printf_printarg_leftjustify(char *argstr, t_vars *vars)
 	{
 		ft_putchar_fd(' ', 1);
 		vars->width--;
-	} 
+	}
 }
 
 static void	ft_printf_printarg_rightjustify(char *argstr, t_vars *vars)
@@ -53,8 +53,8 @@ static void	ft_printf_printarg_rightjustify(char *argstr, t_vars *vars)
 
 size_t	ft_printf_printarg(va_list args, t_vars *vars)
 {
-	char *argstr;
-	size_t arglen;
+	char	*argstr;
+	size_t	arglen;
 
 	argstr = ft_printf_getargstr(args, vars);
 	if (vars->conversion == conv_c || vars->conversion == conv_percent)

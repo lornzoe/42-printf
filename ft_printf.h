@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:26:30 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:15:28 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:53:33 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 # define FT_PRINTF_CHARS_FLAG "-0.# +123456789"
 # define FT_PRINTF_CHARS_CONVERSION "cspdiuxX%"
 
-enum e_flagtypes {
+enum e_flagtypes
+{
 	flag_none			= 0b0000000,
 	flag_dash			= 0b0000001,
 	flag_zero			= 0b0000010,
@@ -32,7 +33,8 @@ enum e_flagtypes {
 	flag_has_width		= 0b1000000
 };
 
-enum e_conversions{
+enum e_conversions
+{
 	conv_none		= 0,
 	conv_c			= 'c',
 	conv_s			= 's',
@@ -41,17 +43,18 @@ enum e_conversions{
 	conv_i			= 'i',
 	conv_u			= 'u',
 	conv_x			= 'x',
-	conv_X 			= 'X',
-	conv_percent 	= '%'
+	conv_X			= 'X',
+	conv_percent	= '%'
 };
 
-typedef struct s_vars {
-	int	flag;
-	size_t width;
-	size_t precision;
-	char conversion;
-	char *endpoint;
-	char isnegsigned;
+typedef struct s_vars
+{
+	int		flag;
+	size_t	width;
+	size_t	precision;
+	char	conversion;
+	char	*endpoint;
+	char	isnegsigned;
 }	t_vars;
 
 size_t	ft_printf(const char *str, ...);
