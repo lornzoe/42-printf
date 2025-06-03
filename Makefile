@@ -6,7 +6,7 @@
 #    By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/29 17:25:56 by lyanga            #+#    #+#              #
-#    Updated: 2025/06/03 08:05:27 by lyanga           ###   ########.fr        #
+#    Updated: 2025/06/03 18:23:05 by lyanga           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,79 +26,81 @@ OUTDIR ?= .
 # **************************************************************************** #
 # srcs
 
-LIBFTDIR = libft
+LIBFTPATH = libft/
+LIBFTSRCS = ft_putstr_fd.c ft_putchar_fd.c ft_calloc.c ft_strchr.c ft_isdigit.c ft_atoi.c ft_ilen.c ft_strlen.c \
+			ft_ptoa.c ft_strdup.c ft_substr.c ft_abs.c ft_itoa.c ft_strjoin.c ft_uitoa.c ft_uitoa_base.c \
+			ft_isspace.c ft_strtrim.c ft_strlcpy.c ft_strrev.c ft_uilen_base.c
+LIBFTINCLUDES = ./libft/
+LIBFTSRCSNAME = $(subst $(LIBFTPATH), , $(LIBFTSRCS))
+LIBFTOBJSNAME = $(LIBFTSRCS:.c=.o)
+LIBFTOBJS	=	$(addprefix $(LIBFTPATH), $(LIBFTOBJSNAME))
 
+SRCSPATH	=	src/
+OBJSPATH	=	src/
+BONUSPATH	=	bonus/
+BOBJSPATH	=	bonus/
+INC			=	header/
 
-SRCSPATH	=	./
-OBJSPATH	=	./
-BONUSPATH	=	./
-BOBJSPATH	=	./
-INC			=	./
-
-SRCS		=	ft_printf.c ft_printf_vars.c ft_printf_getpaddedstr.c ft_printf_getargstr.c	\
+SRCS		=	ft_printf.c ft_printf_vars.c  ft_printf_getargstr.c	\
 				ft_printf_getargstr_c.c ft_printf_getargstr_s.c \
 				ft_printf_getargstr_di.c ft_printf_getargstr_u.c ft_printf_getargstr_xx.c \
 				ft_printf_printarg.c
 
-BONUSSRCS	=	ft_printf.c ft_printf_vars.c
+BONUSSRCS	=	ft_printf_bonus.c ft_printf_vars_bonus.c ft_printf_getpaddedstr_bonus.c ft_printf_getargstr_bonus.c	\
+				ft_printf_getargstr_c_bonus.c ft_printf_getargstr_s_bonus.c \
+				ft_printf_getargstr_di_bonus.c ft_printf_getargstr_u_bonus.c ft_printf_getargstr_xx_bonus.c \
+				ft_printf_printarg_bonus.c
 
 SRCSNAME	=	$(subst $(SRCSPATH), , $(SRCS))
 
-OBJSNAME	=	$(SRCSNAME:.c=.o)
+OBJSNAME	=	$(SRCS:.c=.o)
 OBJS		=	$(addprefix $(OBJSPATH), $(OBJSNAME))
 
 BSRCSNAME 	=	$(subst $(BONUSPATH), , $(BONUSSRCS))
-BOBJSNAME	= 	$(BSRCSNAME:.c=.o)
+BOBJSNAME	= 	$(BONUSSRCS:.c=.o)
 BOBJS		= 	$(addprefix $(BOBJSPATH), $(BOBJSNAME))
 
 # **************************************************************************** #
 # rules
 
-all: $(NAME) p_printf_logo clean
-	@printf "\n$(B)$(MAG)$(NAME) is finished compiling$(D)\n"
-
-p_printf_logo:
-	@printf "      .-.                                     .-. \n"
-	@printf " 42- / -'  /               .-.          /    / -' \n"
-	@printf "   -/-----/---   .-.  ).--.\`-'.  .-.---/----/--   \n"
-	@printf "   /     /       /  )/    /    )/   ) /    /      \n"
-	@printf "\`.'     /._____./\`-'/  _.(__. '/   ( /  \`.'       \n"
-	@printf "          \`==='/                    \`- lyanga AAAA\n"
+all: $(NAME)
+	@printf "$(B)$(MAG)$(NAME) is finished compiling$(D)\n"
 
 addlibft:
-	$(MAKE) -C $(LIBFTDIR) extern OBJSPATH=../ BOBJSPATH=../
+	$(MAKE) -C $(LIBFTPATH)
 
-test: fclean $(NAME)
-	@cc test.c -L. -lftprintf
-	@$(RM) *.o
-	@./a.out
+$(NAME): fclean addlibft $(OBJS) 
+	@printf "$(BLU)"
+	$(AR) $(NAME) $(OBJS) $(LIBFTOBJS)
+	@printf "$(D)"
 
-$(NAME): $(OBJS) addlibft 
-	@$(AR) $(NAME) *.o
 
 $(OBJSPATH)%.o: $(SRCSPATH)%.c
-	@mkdir -p $(dir $@) # 2> /dev/null || true
-	@$(CC) $(DEBUG) $(CFLAGS) -I$(INC) -c $< -o $@
-	@printf "$(GRE)█$(D)"
+	@printf "$(GRE)"
+	$(CC) $(CFLAGS) -I$(INC) -c $< -o $@
+	@printf "$(D)"
 
 $(BOBJSPATH)%.o: $(BONUSPATH)%.c
-	@mkdir -p $(dir $@) # 2> /dev/null || true
-	@$(CC) $(DEBUG) $(CFLAGS) -I$(INC) -c $< -o $@
-	@printf "$(YEL)█$(D)"
+	@printf "$(YEL)"
+	$(CC) $(CFLAGS) -I$(INC) -c $< -o $@
+	@printf "$(D)"
 
-b: $(OBJS) $(BOBJS) addlibft
-	@$(AR) $(NAME) *.o
+b: addlibft $(BOBJS)
+	@printf "$(BLU)"
+	$(AR) $(NAME) $(BOBJS) $(LIBFTOBJS)
+	@printf "$(D)"
 
-bonus: b p_printf_logo clean
-
+bonus: fclean b
+	@printf "\n$(B)$(MAG)$(NAME) + bonus is finished compiling$(D)\n"
 clean:
-	@$(RM) $(OBJS) $(BOBJS)
-	@$(RM) *.o
+	$(MAKE) clean -C $(LIBFTPATH)
+	$(RM) $(OBJS) $(BOBJS)
 	@echo "$(B)Cleaned$(D)"
 
 
 fclean:	clean
-	@$(RM) $(NAME)
+	$(MAKE) fclean -C $(LIBFTPATH)
+	$(RM) $(NAME)
 	@echo "$(B)FCleaned$(D)"
 
 re:	fclean all

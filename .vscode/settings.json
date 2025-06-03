@@ -3,7 +3,8 @@
 		"libft.h": "c",
 		"limits": "c",
 		"charconv": "c",
-		"ft_printf.h": "c"
+		"ft_printf.h": "c",
+		"ft_printf_bonus.h": "c"
 	},
 	"makefile.makefilePath": ""
 }

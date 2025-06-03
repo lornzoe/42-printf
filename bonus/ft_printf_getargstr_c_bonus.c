@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getpaddedstr.c                           :+:      :+:    :+:   */
+/*   ft_printf_getargstr_c_bonus.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/02 22:45:50 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:46:07 by lyanga           ###   ########.fr       */
+/*   Created: 2025/06/02 23:54:16 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/03 18:00:42 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 
-char	*ft_printf_getpaddedstr(size_t width, char *str, char pad)
+char	*ft_printf_getargstr_c(va_list args)
 {
-	char	*temp;
-	size_t	i;
-	char	*result;
+	char	*str;
 
-	if (width == 0)
-		return (ft_strdup(str));
-	temp = ft_calloc(width + 1, sizeof(char));
-	if (!temp)
+	str = ft_calloc(1, 2);
+	if (!str)
 		return (NULL);
-	i = 0;
-	while (i < width)
-	{
-		temp[i] = pad;
-		i++;
-	}
-	result = ft_strjoin(temp, str);
-	free(temp);
-	return (result);
+	*str = (char)va_arg(args, int);
+	return (str);
 }

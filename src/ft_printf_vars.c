@@ -1,23 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_printf_vars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 08:29:37 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 17:57:39 by lyanga           ###   ########.fr       */
+/*   Created: 2025/06/02 19:34:11 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/03 17:52:45 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "ft_printf.h"
 
-int	main(void)
+t_vars	*ft_printf_vars_create(char *str, const char *end)
 {
-	ft_putstr_fd("------\n", 1);
-	char *a = malloc(1);
-	int x =  printf("pf:%d\n", 0);
-	int y =  ft_printf("ft:%d\n", 0);
-	printf("pf/ft: %d, %d", x, y);
-	return (0);
+	t_vars	*vars;
+
+	vars = ft_calloc(1, sizeof(t_vars));
+	if (!vars)
+		return (NULL);
+	vars->conversion = *(ft_strchr(end, *str));
+	return (vars);
 }

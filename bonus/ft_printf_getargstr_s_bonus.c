@@ -1,34 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_u.c                            :+:      :+:    :+:   */
+/*   ft_printf_getargstr_s_bonus.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 02:58:25 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:38:44 by lyanga           ###   ########.fr       */
+/*   Created: 2025/06/03 02:57:15 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/03 18:00:36 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 
-char	*ft_printf_getargstr_u(va_list args, t_vars *vars)
+char	*ft_printf_getargstr_s(va_list args, t_vars *vars)
 {
 	char	*str;
 	char	*temp;
-	size_t	len;
-	int		x;
 
-	x = va_arg(args, unsigned int);
-	if (x == 0 && vars->flag & flag_has_precision && vars->precision == 0)
-		return (ft_strdup(""));
-	str = ft_uitoa(x);
-	len = ft_strlen(str);
-	if (vars->flag & flag_has_precision && vars->precision > len)
+	temp = va_arg(args, char *);
+	if (temp == NULL)
 	{
-		temp = str;
-		str = ft_printf_getpaddedstr(vars->precision - len, temp, '0');
-		free(temp);
+		if (vars->flag & flag_has_precision && vars->precision < 6)
+			str = ft_strdup("");
+		else
+			str = ft_strdup("(null)");
+	}
+	else
+	{
+		if (vars->flag & flag_has_precision)
+		{
+			if (vars->precision > 0)
+				str = ft_substr(temp, 0, vars->precision);
+			else
+				str = ft_strdup("");
+		}
+		else
+			str = ft_strdup(temp);
 	}
 	return (str);
 }

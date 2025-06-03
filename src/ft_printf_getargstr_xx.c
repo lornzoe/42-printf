@@ -1,41 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_getargstr_s.c                            :+:      :+:    :+:   */
+/*   ft_printf_getargstr_xx.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 02:57:15 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:36:36 by lyanga           ###   ########.fr       */
+/*   Created: 2025/06/03 03:00:58 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/03 17:39:59 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*ft_printf_getargstr_s(va_list args, t_vars *vars)
+char	*ft_printf_getargstr_xx(va_list args, t_vars *vars)
 {
 	char	*str;
-	char	*temp;
+	int		x;
 
-	temp = va_arg(args, char *);
-	if (temp == NULL)
-	{
-		if (vars->flag & flag_has_precision && vars->precision < 6)
-			str = ft_strdup("");
-		else
-			str = ft_strdup("(null)");
-	}
+	x = va_arg(args, unsigned int);
+	if (vars->conversion == conv_x)
+		str = ft_uitoa_base(x, "0123456789abcdef");
 	else
-	{
-		if (vars->flag & flag_has_precision)
-		{
-			if (vars->precision > 0)
-				str = ft_substr(temp, 0, vars->precision);
-			else if (vars->precision == 0)
-				str = ft_strdup("");
-		}
-		else
-			str = ft_strdup(temp);
-	}
+		str = ft_uitoa_base(x, "0123456789ABCDEF");
 	return (str);
 }

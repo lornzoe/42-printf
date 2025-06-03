@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:26:30 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:53:33 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 16:44:00 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdarg.h>
 # include <limits.h>
 
-# include "libft/libft.h"
+# include "../libft/libft.h"
 
 # define FT_PRINTF_CHARS_FLAG "-0.# +123456789"
 # define FT_PRINTF_CHARS_CONVERSION "cspdiuxX%"

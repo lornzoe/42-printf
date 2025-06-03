@@ -1,23 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_printf_getargstr_di.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 08:29:37 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 17:57:39 by lyanga           ###   ########.fr       */
+/*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/03 17:38:36 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "ft_printf.h"
 
-int	main(void)
+
+char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
 {
-	ft_putstr_fd("------\n", 1);
-	char *a = malloc(1);
-	int x =  printf("pf:%d\n", 0);
-	int y =  ft_printf("ft:%d\n", 0);
-	printf("pf/ft: %d, %d", x, y);
-	return (0);
+	char	*str;
+	char	*temp;
+	int		x;
+
+	x = va_arg(args, int);
+	str = ft_itoa(ft_abs(x));
+	if (x < 0)
+	{
+		vars->isnegsigned = 1;
+		if (*str == '-')
+		{
+			temp = str;
+			str = ft_strtrim(str, "-");
+			free(temp);
+		}
+	}
+	return (str);
 }

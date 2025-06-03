@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_printf_getargstr_s.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 08:29:37 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 17:57:39 by lyanga           ###   ########.fr       */
+/*   Created: 2025/06/03 02:57:15 by lyanga            #+#    #+#             */
+/*   Updated: 2025/06/03 17:52:07 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "ft_printf.h"
 
-int	main(void)
+char	*ft_printf_getargstr_s(va_list args)
 {
-	ft_putstr_fd("------\n", 1);
-	char *a = malloc(1);
-	int x =  printf("pf:%d\n", 0);
-	int y =  ft_printf("ft:%d\n", 0);
-	printf("pf/ft: %d, %d", x, y);
-	return (0);
+	char	*str;
+	char	*temp;
+
+	temp = va_arg(args, char *);
+	if (temp == NULL)
+	{
+		str = ft_strdup("(null)");
+	}
+	else
+	{
+		str = ft_strdup(temp);
+	}
+	return (str);
 }
