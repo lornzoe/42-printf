@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 08:36:17 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 09:06:44 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static char	*apply_precision_flag(char *str, t_vars *vars)
 	return (str);
 }
 
-static char	*apply_sign_flag(char *str, t_vars *vars)
+static char	*apply_sign_flags(char *str, t_vars *vars)
 {
 	char	*temp;
 
@@ -44,35 +44,29 @@ static char	*apply_sign_flag(char *str, t_vars *vars)
 	return (str);
 }
 
-static char	*handle_negative(char *str, int x, t_vars *vars)
-{
-	char	*temp;
-
-	vars->isnegsigned = 1;
-	str = ft_itoa(ft_abs(x));
-	if (*str == '-')
-	{
-		temp = str;
-		str = ft_strtrim(str, "-");
-		free(temp);
-	}
-}
-
 char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
 {
 	char	*str;
+	char	*temp;
 	int		x;
 
 	x = va_arg(args, int);
 	if (x == 0 && vars->flag & flag_has_precision && vars->precision == 0)
 		return (ft_strdup(""));
+	str = ft_itoa(ft_abs(x));
 	if (x < 0)
-		handle_negative(str, x, vars);
-	else
-		str = ft_itoa(x);
+	{
+		vars->isnegsigned = 1;
+		if (*str == '-')
+		{
+			temp = str;
+			str = ft_strtrim(str, "-");
+			free(temp);
+		}
+	}
 	str = apply_precision_flag(str, vars);
 	if (!str)
 		return (NULL);
-	str = apply_sign_flag(str, vars);
+	str = apply_sign_flags(str, vars);
 	return (str);
 }
