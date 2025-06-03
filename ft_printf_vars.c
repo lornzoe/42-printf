@@ -6,48 +6,47 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/02 19:34:11 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 03:45:57 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:28:22 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static void ft_printf_vars_handleconflictflags(t_vars *vars)
+static void	ft_printf_vars_handleconflictflags(t_vars *vars)
 {
 	if (vars->flag & flag_zero && vars->flag & flag_has_precision)
 		vars->flag = vars->flag & ~(flag_zero);
 	if (vars->flag & flag_zero && vars->conversion == conv_s)
 		vars->flag = vars->flag & ~(flag_zero);
-
 }
 
 static int	ft_printf_vars_handleflag_width(char *str, t_vars *vars)
 {
-	size_t i;
+	size_t	i;
 
 	i = ft_atoi(str);
 	if (i <= INT_MAX && i != 0)
 	{
 		vars->width = i;
-		return ft_ilen(i);
+		return (ft_ilen(i));
 	}
 	return (0);
 }
 
-static int ft_printf_vars_handleflag_precision(char *str, t_vars *vars)
+static int	ft_printf_vars_handleflag_precision(char *str, t_vars *vars)
 {
-	size_t i;
+	size_t	i;
 
 	i = ft_atoi(str);
 	if (i <= INT_MAX && i != 0)
 	{
 		vars->precision = i;
-		return ft_ilen(i);
+		return (ft_ilen(i));
 	}
 	return (0);
 }
 
-static size_t ft_printf_vars_handleflags(char chr, char* str, t_vars *vars)
+static size_t	ft_printf_vars_handleflags(char chr, char *str, t_vars *vars)
 {
 	if (chr == '-')
 		vars->flag |= flag_dash;

@@ -6,17 +6,20 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:26:30 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 03:46:21 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:15:28 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-#include <stdarg.h>
-#include <limits.h>
+# include <stdarg.h>
+# include <limits.h>
 
-#include "libft/libft.h"
+# include "libft/libft.h"
+
+# define FT_PRINTF_CHARS_FLAG "-0.# +123456789"
+# define FT_PRINTF_CHARS_CONVERSION "cspdiuxX%"
 
 enum e_flagtypes {
 	flag_none			= 0b0000000,
@@ -63,5 +66,7 @@ char	*ft_printf_getargstr_u(va_list args, t_vars *vars);
 char	*ft_printf_getargstr_xx(va_list args, t_vars *vars);
 
 char	*ft_printf_getpaddedstr(size_t width, char *str, char pad);
+
+size_t	ft_printf_printarg(va_list args, t_vars *vars);
 
 #endif

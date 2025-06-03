@@ -6,95 +6,44 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 03:46:34 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:26:47 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static size_t	ft_printf_printarg(va_list args, t_vars *vars)
+static size_t	process_conversion(char **str, va_list args)
 {
-	char *argstr;
-	size_t arglen;
+	t_vars	*vars;
+	size_t	len;
 
-	// get strlen of the value we're converting
-	argstr = ft_printf_getargstr(args, vars);
-	if (vars->conversion == conv_c || vars->conversion == conv_percent)
-		arglen = 1;
-	else
-		arglen = ft_strlen(argstr) + (vars->isnegsigned != 0);
-	if (vars->width > arglen)
-		vars->width -= arglen;
-	else
-		vars->width = 0;
-	arglen += vars->width;
-	if (vars->flag & flag_dash)
-	{
-		if (vars->isnegsigned)
-			ft_putchar_fd('-', 1);
-		// left justification, pad with ' 's
-		if (vars->conversion == conv_c)
-			ft_putchar_fd(*argstr, 1);
-		else
-			ft_putstr_fd(argstr, 1);
-		while (vars->width > 0)
-		{
-			ft_putchar_fd(' ', 1);
-			vars->width--;
-		} 
-	}
-	else
-	{
-		// right justification
-		if (vars->isnegsigned && vars->flag & flag_zero)
-		{
-			ft_putchar_fd('-', 1);
-		}
-		while (vars->width > 0)
-		{
-			if (vars->flag & flag_zero)
-				ft_putchar_fd('0', 1);
-			else
-				ft_putchar_fd(' ', 1);
-			vars->width--;
-		}
-		if (vars->conversion == conv_c)
-			ft_putchar_fd(*argstr, 1);
-		else
-		{
-			if (vars->isnegsigned && !(vars->flag & flag_zero))
-				ft_putchar_fd('-', 1);
-			ft_putstr_fd(argstr, 1);
-		}
-	}
-	free(argstr);
-	return arglen;
+	(*str)++;
+	if (**str == '\0')
+		return (0);
+	vars = ft_printf_vars_create(*str,
+			FT_PRINTF_CHARS_FLAG, FT_PRINTF_CHARS_CONVERSION);
+	if (!vars)
+		return (0);
+	len = ft_printf_printarg(args, vars);
+	if (vars->endpoint)
+		*str = vars->endpoint;
+	free(vars);
+	return (len);
 }
+
 size_t	ft_printf(const char *s, ...)
 {
-	va_list args;
-	t_vars	*vars;
-	size_t len;
-	char *str;
+	va_list	args;
+	size_t	len;
+	char	*str;
 
-	str = (char*)s;
+	str = (char *)s;
 	len = 0;
 	va_start (args, s);
 	while (*str != '\0')
 	{
 		if (*str == '%')
-		{
-			str++;
-			if (*str == '\0')
-				break ;
-			vars = ft_printf_vars_create(str, "-0.# +123456789", "cspdiuxX%");
-			if (!vars)
-				break ;
-			len += ft_printf_printarg(args, vars);
-			if (vars->endpoint)
-				str = vars->endpoint;
-			free(vars);
-		}
+			len += process_conversion(&str, args);
 		else
 		{
 			ft_putchar_fd(*str, 1);
@@ -103,5 +52,5 @@ size_t	ft_printf(const char *s, ...)
 		str++;
 	}
 	va_end (args);
-	return len;
+	return (len);
 }

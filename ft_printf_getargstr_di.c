@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 00:53:33 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 03:24:52 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 08:25:11 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ char	*ft_printf_getargstr_di(va_list args, t_vars *vars)
 	char *temp;
 
 	int x = va_arg(args, int);
-	if (x == 0 && vars->flag & flag_has_precision && vars->precision == 0)
+	if (x == 0 
+		&& vars->flag & flag_has_precision && vars->precision == 0)
 		return (ft_strdup(""));		
 	if (x < 0)
 	{
