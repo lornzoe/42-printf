@@ -6,13 +6,13 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 02:57:15 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 17:52:07 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 18:53:08 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-char	*ft_printf_getargstr_s(va_list args)
+char	*ft_printf_getargstr_s(va_list args, t_vars *vars)
 {
 	char	*str;
 	char	*temp;
@@ -20,11 +20,22 @@ char	*ft_printf_getargstr_s(va_list args)
 	temp = va_arg(args, char *);
 	if (temp == NULL)
 	{
-		str = ft_strdup("(null)");
+		if (vars->flag & flag_has_precision && vars->precision < 6)
+			str = ft_strdup("");
+		else
+			str = ft_strdup("(null)");
 	}
 	else
 	{
-		str = ft_strdup(temp);
+		if (vars->flag & flag_has_precision)
+		{
+			if (vars->precision > 0)
+				str = ft_substr(temp, 0, vars->precision);
+			else
+				str = ft_strdup("");
+		}
+		else
+			str = ft_strdup(temp);
 	}
 	return (str);
 }

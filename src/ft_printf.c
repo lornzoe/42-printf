@@ -6,7 +6,7 @@
 /*   By: lyanga <lyanga@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/16 18:25:10 by lyanga            #+#    #+#             */
-/*   Updated: 2025/06/03 18:16:03 by lyanga           ###   ########.fr       */
+/*   Updated: 2025/06/03 18:53:13 by lyanga           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,13 @@ static size_t	process_conversion(char **str, va_list args)
 	(*str)++;
 	if (**str == '\0')
 		return (0);
-	vars = ft_printf_vars_create(*str, FT_PRINTF_CHARS_CONVERSION);
-	if (!vars || !vars->conversion)
+	vars = ft_printf_vars_create(*str,
+			FT_PRINTF_CHARS_FLAG, FT_PRINTF_CHARS_CONVERSION);
+	if (!vars)
 		return (0);
 	len = ft_printf_printarg(args, vars);
+	if (vars->endpoint)
+		*str = vars->endpoint;
 	free(vars);
 	return (len);
 }
